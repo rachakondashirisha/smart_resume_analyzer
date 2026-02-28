@@ -1,0 +1,185 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Smart Resume Analyzer - Sign Up / Sign In</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #eef2ff, #f8fafc);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #1f2937;
+        }
+
+        .wrapper {
+            width: 100%;
+            max-width: 460px;
+            padding: 0 16px;
+        }
+
+        .title {
+            text-align: center;
+            margin-bottom: 14px;
+        }
+
+        .card {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 22px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        }
+
+        h1, h2 {
+            margin-top: 0;
+        }
+
+        .subtitle {
+            margin-top: 0;
+            color: #6b7280;
+            margin-bottom: 16px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 11px 12px;
+            border-radius: 8px;
+            border: 1px solid #d1d5db;
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+
+        button {
+            width: 100%;
+            border: none;
+            background: #2563eb;
+            color: white;
+            padding: 11px;
+            border-radius: 8px;
+            font-size: 15px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        button:hover {
+            background: #1d4ed8;
+        }
+
+        .error {
+            background: #fee2e2;
+            border: 1px solid #fecaca;
+            color: #991b1b;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 14px;
+            text-align: center;
+        }
+
+        .hint {
+            margin-top: 8px;
+            font-size: 13px;
+            color: #6b7280;
+        }
+
+        .toggle {
+            margin-top: 12px;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .toggle a {
+            color: #1d4ed8;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .toggle a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <div class="title">
+            <h1>Smart Resume Analyzer</h1>
+        </div>
+
+        {% if error %}
+        <div class="error">{{ error }}</div>
+        {% endif %}
+
+        <div class="card">
+            <h2 id="form-title">Sign Up</h2>
+            <p class="subtitle" id="form-subtitle">Create an account to continue.</p>
+
+            <form method="POST" id="auth-form">
+                <input type="hidden" name="auth_action" id="auth_action" value="signup" />
+
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" required />
+
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" minlength="6" required />
+
+                <button type="submit" id="submit-btn">Create Account</button>
+                <p class="hint">Password must be at least 6 characters.</p>
+            </form>
+
+            <div class="toggle">
+                <span id="toggle-prefix">Already have an account?</span>
+                <a href="#" id="toggle-link">Sign In</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const formTitle = document.getElementById("form-title");
+        const formSubtitle = document.getElementById("form-subtitle");
+        const authAction = document.getElementById("auth_action");
+        const submitBtn = document.getElementById("submit-btn");
+        const togglePrefix = document.getElementById("toggle-prefix");
+        const toggleLink = document.getElementById("toggle-link");
+
+        let isSignup = true;
+
+        function renderMode() {
+            if (isSignup) {
+                formTitle.textContent = "Sign Up";
+                formSubtitle.textContent = "Create an account to continue.";
+                authAction.value = "signup";
+                submitBtn.textContent = "Create Account";
+                togglePrefix.textContent = "Already have an account?";
+                toggleLink.textContent = "Sign In";
+            } else {
+                formTitle.textContent = "Sign In";
+                formSubtitle.textContent = "Sign in with your existing account.";
+                authAction.value = "signin";
+                submitBtn.textContent = "Sign In";
+                togglePrefix.textContent = "Don't have an account?";
+                toggleLink.textContent = "Sign Up";
+            }
+        }
+
+        toggleLink.addEventListener("click", function (event) {
+            event.preventDefault();
+            isSignup = !isSignup;
+            renderMode();
+        });
+
+        renderMode();
+    </script>
+</body>
+</html>
