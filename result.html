@@ -1,0 +1,205 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Smart Resume Analyzer - Result</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f8fafc;
+            color: #1f2937;
+        }
+
+        .container {
+            max-width: 1040px;
+            margin: 30px auto;
+            padding: 0 16px 20px;
+        }
+
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 14px;
+        }
+
+        .topbar a {
+            text-decoration: none;
+            color: #1d4ed8;
+            font-weight: 600;
+        }
+
+        .summary {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+        }
+
+        .score {
+            font-size: 40px;
+            margin: 4px 0;
+            color: #2563eb;
+            font-weight: 700;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 14px;
+        }
+
+        .card {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 16px;
+        }
+
+        h1, h2, h3 {
+            margin-top: 0;
+        }
+
+        .pill-wrap {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .pill {
+            background: #e0ecff;
+            border: 1px solid #bfdbfe;
+            color: #1d4ed8;
+            border-radius: 999px;
+            padding: 6px 10px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .pill.missing {
+            background: #fee2e2;
+            border-color: #fecaca;
+            color: #b91c1c;
+        }
+
+        ul {
+            margin: 8px 0 0;
+            padding-left: 18px;
+        }
+
+        li {
+            margin-bottom: 7px;
+            line-height: 1.4;
+        }
+
+        .muted {
+            color: #6b7280;
+        }
+
+        .actions {
+            margin-top: 18px;
+        }
+
+        .btn {
+            text-decoration: none;
+            background: #111827;
+            color: #ffffff;
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .btn:hover {
+            background: #000000;
+        }
+
+        .week-tag {
+            font-weight: 700;
+            color: #1d4ed8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="topbar">
+            <div>Signed in as <strong>{{ user_identity }}</strong></div>
+            <a href="{{ url_for('logout') }}">Sign Out</a>
+        </div>
+
+        <div class="summary">
+            <h1>Smart Resume Analyzer - Result</h1>
+            <p class="muted">Detected Role: <strong>{{ role }}</strong></p>
+            <div class="score">{{ match_score }}%</div>
+            <p class="muted">Resume Match Percentage</p>
+        </div>
+
+        <div class="grid">
+            <div class="card">
+                <h2>Matched Skills</h2>
+                {% if matched_skills %}
+                <div class="pill-wrap">
+                    {% for skill in matched_skills %}
+                    <span class="pill">{{ skill }}</span>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p class="muted">No matched skills found.</p>
+                {% endif %}
+            </div>
+
+            <div class="card">
+                <h2>Missing Skills</h2>
+                {% if missing_skills %}
+                <div class="pill-wrap">
+                    {% for skill in missing_skills %}
+                    <span class="pill missing">{{ skill }}</span>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p class="muted">No missing skills detected.</p>
+                {% endif %}
+            </div>
+
+            <div class="card">
+                <h2>Personalized Learning Roadmap</h2>
+                {% if roadmap %}
+                <ul>
+                    {% for item in roadmap %}
+                    <li>
+                        <span class="week-tag">{{ item.week }}</span> -> <strong>{{ item.skill }}</strong><br />
+                        {{ item.guidance }}<br />
+                        <span class="muted">How to start: {{ item.resource }}</span>
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% else %}
+                <p class="muted">Your profile already matches all detected required skills.</p>
+                {% endif %}
+            </div>
+
+            <div class="card">
+                <h2>Suggested Interview Questions</h2>
+                {% if interview_questions %}
+                <ul>
+                    {% for question in interview_questions %}
+                    <li>{{ question }}</li>
+                    {% endfor %}
+                </ul>
+                {% else %}
+                <p class="muted">No interview questions generated.</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="actions">
+            <a class="btn" href="{{ url_for('index') }}">Analyze Another Resume</a>
+        </div>
+    </div>
+</body>
+</html>
